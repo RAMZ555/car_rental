@@ -1,6 +1,7 @@
 ## 🚗 Car Rental Request App — Project Structure
 
 A simple Spring Boot REST API for managing car rental requests.
+#
 
 ###📁 RentalRequest.java
 Location: model package
