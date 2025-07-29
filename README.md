@@ -16,7 +16,7 @@ Annotated with @Entity for JPA mapping to a table.
 
 Lombok annotations like @Data, @NoArgsConstructor, and @AllArgsConstructor generate boilerplate code like getters, setters, and constructors.
 
-
+#
 
 ##📁 RentalRequestRepository.java
 Location: repository package
@@ -29,7 +29,7 @@ Automatically provides methods like save(), findAll(), findById(), deleteById(),
 
 No need to implement manually — Spring generates the implementation at runtime.
 
-
+#
 
 ##📁 RentalRequestService.java
 Location: service package
@@ -42,7 +42,7 @@ Calls the repository to interact with the database.
 
 Methods: getAllRentals(), getRentalById(), createRental(), updateRental(), deleteRental().
 
-
+#
 
 ##📁 RentalRequestController.java
 Location: controller package
@@ -65,7 +65,7 @@ DELETE /api/rentals/{id} → Delete rental
 
 Uses @RestController and @RequestMapping.
 
-
+#
 
 ##📁 RentalRequestAppApplication.java
 Location: main package
