@@ -2,7 +2,7 @@
 
 A simple Spring Boot REST API for managing car rental requests.
 
-##📁 RentalRequest.java
+###📁 RentalRequest.java
 Location: model package
 
 This is the Entity class.
@@ -15,6 +15,8 @@ Annotated with @Entity for JPA mapping to a table.
 
 Lombok annotations like @Data, @NoArgsConstructor, and @AllArgsConstructor generate boilerplate code like getters, setters, and constructors.
 
+
+
 ##📁 RentalRequestRepository.java
 Location: repository package
 
@@ -26,6 +28,8 @@ Automatically provides methods like save(), findAll(), findById(), deleteById(),
 
 No need to implement manually — Spring generates the implementation at runtime.
 
+
+
 ##📁 RentalRequestService.java
 Location: service package
 
@@ -36,6 +40,8 @@ Contains business logic for handling rental requests.
 Calls the repository to interact with the database.
 
 Methods: getAllRentals(), getRentalById(), createRental(), updateRental(), deleteRental().
+
+
 
 ##📁 RentalRequestController.java
 Location: controller package
@@ -57,6 +63,8 @@ PUT /api/rentals/{id} → Update rental
 DELETE /api/rentals/{id} → Delete rental
 
 Uses @RestController and @RequestMapping.
+
+
 
 ##📁 RentalRequestAppApplication.java
 Location: main package
