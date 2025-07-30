@@ -1,0 +1,34 @@
+package com.example.rentalrequestapp.service.carService;
+
+
+import com.example.rentalrequestapp.model.carModel.Car;
+import com.example.rentalrequestapp.repository.carRepository.CarRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class CarService {
+
+    @Autowired
+    private CarRepository carRepository;
+
+    public Car saveCar(Car car) {
+        return carRepository.save(car);
+    }
+
+    public List<Car> getAllCars() {
+        return carRepository.findAll();
+    }
+
+    public Optional<Car> getCarById(Long id) {
+        return carRepository.findById(id);
+    }
+
+    public void deleteCar(Long id) {
+        carRepository.deleteById(id);
+    }
+}
+
