@@ -1,7 +1,7 @@
-#🚗 Car Rental Request App — Project Structure
-#A simple Spring Boot REST API for managing car rental requests, cars, and car accessories.
+## 🚗 Car Rental Request App — Project Structure
+# A simple Spring Boot REST API for managing car rental requests, cars, and car accessories.
 
-#📦 Project Layers:
+# 📦 Project Layers:
 model → JPA Entity classes
 
 repository → Spring Data JPA interfaces
@@ -12,7 +12,7 @@ controller → REST API endpoints
 
 main → Application bootstrap
 
-#🧾 Entity Classes
+# 🧾 Entity Classes
 
 📁 RentalRequest.java
 
