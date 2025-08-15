@@ -1,7 +1,6 @@
 package com.example.rentalrequest.dto;
 
 import lombok.Data;
-
 import java.math.BigDecimal;
 import java.util.Set;
 
@@ -25,5 +24,10 @@ public class CarDTO {
     private BigDecimal monthlyPrice;
     private boolean available;
     private Set<String> accessories; // Accessory names only
+
+    // NEW: List of image URLs
+    private Set<String> imageUrls;
 }
+
+
 

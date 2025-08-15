@@ -8,7 +8,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -92,6 +94,20 @@ public class CarController {
     public ResponseEntity<List<Car>> getCarsByLocation(@PathVariable String location) {
         List<Car> cars = carService.findCarsByLocation(location);
         return ResponseEntity.ok(cars);
+    }
+
+    @PostMapping("/{carId}/upload-images")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Map<String, Object>> uploadCarImages(
+            @PathVariable Long carId,
+            @RequestParam("files") List<MultipartFile> files) throws IOException {
+
+        List<String> urls = carService.uploadCarImages(carId, files);
+
+        return ResponseEntity.ok(Map.of(
+                "message", "Images uploaded successfully",
+                "urls", urls
+        ));
     }
 }
 

@@ -3,15 +3,19 @@ package com.example.rentalrequest.service;
 
 import com.example.rentalrequest.dto.CarDTO;
 import com.example.rentalrequest.model.Car;
+import com.example.rentalrequest.model.CarImage;
 import com.example.rentalrequest.model.Accessory;
 import com.example.rentalrequest.repository.CarRepository;
+import com.example.rentalrequest.repository.CarImageRepository;
 import com.example.rentalrequest.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -22,6 +26,8 @@ import java.util.stream.Collectors;
 public class CarService {
 
     private final CarRepository carRepository;
+    private final CarImageRepository carImageRepository;
+    private final S3Service s3Service;
 
     @Transactional(readOnly = true)
     public List<CarDTO> getAllCarsWithAccessories() {
@@ -116,6 +122,42 @@ public class CarService {
         return carRepository.findByMainLocationContainingIgnoreCase(location);
     }
 
+    // NEW METHOD: Upload multiple images for a car
+    public List<String> uploadCarImages(Long carId, List<MultipartFile> files) throws IOException {
+        log.info("Uploading {} images for car ID: {}", files.size(), carId);
+
+        // Validate car exists
+        Car car = carRepository.findById(carId)
+                .orElseThrow(() -> new ResourceNotFoundException("Car not found with id: " + carId));
+
+        List<String> uploadedUrls = new ArrayList<>();
+
+        for (MultipartFile file : files) {
+            // Validate file
+            if (file.isEmpty()) {
+                log.warn("Empty file skipped during upload for car ID: {}", carId);
+                continue;
+            }
+
+            // Upload to S3
+            String imageUrl = s3Service.uploadFile(file);
+
+            // Create CarImage entity
+            CarImage carImage = new CarImage();
+            carImage.setImageUrl(imageUrl);
+            carImage.setCar(car);
+
+            // Save to database
+            carImageRepository.save(carImage);
+            uploadedUrls.add(imageUrl);
+
+            log.info("Image uploaded and saved for car ID: {} - URL: {}", carId, imageUrl);
+        }
+
+        log.info("Successfully uploaded {} images for car ID: {}", uploadedUrls.size(), carId);
+        return uploadedUrls;
+    }
+
     // Private helper methods
     private CarDTO convertToDTO(Car car) {
         try {
@@ -131,12 +173,23 @@ public class CarService {
                 dto.setAccessories(new HashSet<>());
             }
 
+            // NEW: Add image URLs to DTO
+            if (car.getImages() != null) {
+                Set<String> imageUrls = car.getImages().stream()
+                        .map(CarImage::getImageUrl)
+                        .collect(Collectors.toSet());
+                dto.setImageUrls(imageUrls);
+            } else {
+                dto.setImageUrls(new HashSet<>());
+            }
+
             return dto;
         } catch (Exception e) {
             log.warn("Error converting car {} to DTO: {}", car.getId(), e.getMessage());
             CarDTO dto = new CarDTO();
             BeanUtils.copyProperties(car, dto);
             dto.setAccessories(new HashSet<>());
+            dto.setImageUrls(new HashSet<>());
             return dto;
         }
     }
